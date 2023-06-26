@@ -1,3 +1,9 @@
+## Setting up QEMU for Raspberry Pi 4 target
+
+### References
+
+- https://kitsunemimi.pw/notes/posts/headless-raspberry-pi-os-virtualization-64-bit-edition.html
+
 sudo apt install qemu-system
 
 ## Qt5 setup
