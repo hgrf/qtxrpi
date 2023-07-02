@@ -1,6 +1,0 @@
-build/
-cross-pi-gcc-10.2.0-2/
-qt5/
-qt5.15/
-sysroot/
-Image.gz

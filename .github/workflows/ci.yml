@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs: 
+  build-docker:
+    name: Build and push docker image
+    runs-on: ubuntu-latest
+    env:
+      COMPOSE_FILE: docker/docker-compose.yml
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build docker images
+      run: docker build -t ghcr.io/hgrf/qtxrpi .
+
+    - name: Login to ghcr
+      run: echo ${{ github.token }} | docker login ghcr.io -u hgrf --password-stdin
+
+    - name: Push to ghcr
+      run: docker push ghcr.io/hgrf/qtxrpi:latest
