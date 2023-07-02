@@ -25,3 +25,9 @@ jobs:
 
     - name: Push to ghcr
       run: docker push ghcr.io/hgrf/qtxrpi:latest
+
+    - name: Extract sysroot
+      run: make sysroot
+
+    - name: Get toolchain
+      run: make toolchain
