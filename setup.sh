@@ -19,7 +19,14 @@ sshpass -p $PASS ssh $CONN \
     sudo apt install -y libxcb-randr0-dev libxcb-xtest0-dev libxcb-shape0-dev libxcb-xkb-dev && \
     sudo apt install -y libbluetooth-dev && \
     sudo rm -rf /var/lib/apt/lists/*"
-    
+
+if [ $? -gt 0 ]; then
+    echo "Failed to install dependencies"
+    sshpass -p $PASS ssh $CONN "sudo shutdown now"
+    wait $QEMU_PID
+    exit 1
+fi
+
 # shut down the virtual machine and wait for it to finish
 sshpass -p $PASS ssh $CONN "sudo shutdown now"
 wait $QEMU_PID
