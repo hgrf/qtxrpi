@@ -34,3 +34,7 @@ jobs:
 
     - name: Get Qt5
       run: make download-qt5
+
+    - name: Configure Qt5
+      run: make configure-qt5
+  

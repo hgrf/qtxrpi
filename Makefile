@@ -32,3 +32,25 @@ download-qt5:
 	mkdir qt5
 	tar -C qt5 --strip 1 -xvf qt-everywhere-opensource-src-5.15.3.tar.xz
 	rm qt-everywhere-opensource-src-5.15.3.tar.xz
+
+patch-qt5:
+	cp -R qt5/qtbase/mkspecs/linux-arm-gnueabi-g++ qt5/qtbase/mkspecs/linux-arm-gnueabihf-g++
+	sed -i -e 's/arm-linux-gnueabi-/arm-linux-gnueabihf-/g' \
+		qt5/qtbase/mkspecs/linux-arm-gnueabihf-g++/qmake.conf
+	sed -i '44 a#include <limits>' qt5/qtbase/src/corelib/global/qglobal.h
+
+configure-qt5:
+	rm -rf build && mkdir build && \
+		cd build && \
+		../qt5/configure -v -opengl es2 -eglfs \
+			-device linux-rasp-pi4-v3d-g++ \
+			-device-option CROSS_COMPILE=${PWD}/cross-pi-gcc-10.2.0-2/bin/arm-linux-gnueabihf- \
+			-sysroot ${PWD}/sysroot \
+			-opensource -confirm-license -release -nomake tests -nomake examples -no-compile-examples \
+			-skip qtwayland -skip qtwebengine -skip qtlocation -skip qtscript \
+			-prefix /usr/local/qt5.15 \
+			-extprefix ${PWD}/qt5.15 \
+			-make libs -pkg-config -recheck \
+			-no-use-gold-linker \
+			-L${PWD}/sysroot/usr/lib/arm-linux-gnueabihf \
+			-I${PWD}/sysroot/usr/include/arm-linux-gnueabihf
