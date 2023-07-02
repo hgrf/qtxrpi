@@ -31,3 +31,6 @@ jobs:
 
     - name: Get toolchain
       run: make toolchain
+
+    - name: Get Qt5
+      run: make download-qt5

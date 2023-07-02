@@ -25,3 +25,10 @@ toolchain:
 		https://sourceforge.net/projects/raspberry-pi-cross-compilers/files/Raspberry%20Pi%20GCC%20Cross-Compiler%20Toolchains/Bullseye/GCC%2010.2.0/Raspberry%20Pi%203A%2B%2C%203B%2B%2C%204/cross-gcc-10.2.0-pi_3%2B.tar.gz
 	tar -xvf cross-gcc-10.2.0-pi_3+.tar.gz
 	rm cross-gcc-10.2.0-pi_3+.tar.gz
+
+download-qt5:
+	wget -O qt-everywhere-opensource-src-5.15.3.tar.xz \
+		https://download.qt.io/archive/qt/5.15/5.15.3/single/qt-everywhere-opensource-src-5.15.3.tar.xz
+	mkdir qt5
+	tar -C qt5 --strip 1 -xvf qt-everywhere-opensource-src-5.15.3.tar.xz
+	rm qt-everywhere-opensource-src-5.15.3.tar.xz
