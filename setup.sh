@@ -13,7 +13,8 @@ done
 
 # install dependencies in qemu-rpi virtual machine
 sshpass -p $PASS ssh $CONN \
-    "sudo apt update && \
+    "sudo bash -c 'echo deb-src http://raspbian.raspberrypi.org/raspbian/ bullseye main contrib non-free rpi >> /etc/apt/sources.list' && \
+    sudo apt update && \
     sudo apt install -y build-essential cmake unzip pkg-config gfortran && \
     sudo apt build-dep qt5-qmake libqt5gui5 libqt5webengine-data libqt5webkit5 libudev-dev libinput-dev libts-dev libxcb-xinerama0-dev libxcb-xinerama0 gdbserver && \
     sudo apt install -y libxcb-randr0-dev libxcb-xtest0-dev libxcb-shape0-dev libxcb-xkb-dev && \
