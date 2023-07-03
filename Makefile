@@ -5,6 +5,7 @@ docker:
 .PHONY: sysroot
 sysroot:
 	docker run --rm -v ${PWD}/sysroot:/sysroot ghcr.io/hgrf/qtxrpi /sysroot/build.sh
+	ls -la sysroot
 	#tar -czvf sysroot0.tar.gz sysroot
 	wget -O sysroot/sysroot-relativelinks.py https://raw.githubusercontent.com/abhiTronix/rpi_rootfs/master/scripts/sysroot-relativelinks.py
 	chmod +x sysroot/sysroot-relativelinks.py
