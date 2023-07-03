@@ -35,11 +35,26 @@ download-qt5:
 	tar -C qt5 --strip 1 -xvf qt-everywhere-opensource-src-5.15.3.tar.xz
 	rm qt-everywhere-opensource-src-5.15.3.tar.xz
 
+# c.f. https://forum.qt.io/topic/88588/qtbase-compilation-error-with-device-linux-rasp-pi3-g-qeglfskmsgbmwindow-cpp/9
+define EGL_PLATFORM_PATCH
+typedef uint32_t DISPMANX_ELEMENT_HANDLE_T;
+typedef struct {
+	DISPMANX_ELEMENT_HANDLE_T element;
+	int width;
+	int height;
+} EGL_DISPMANX_WINDOW_T;
+
+#endif /* __eglplatform_h */
+endef
+
+export EGL_PLATFORM_PATCH
 patch-qt5:
 	cp -R qt5/qtbase/mkspecs/linux-arm-gnueabi-g++ qt5/qtbase/mkspecs/linux-arm-gnueabihf-g++
 	sed -i -e 's/arm-linux-gnueabi-/arm-linux-gnueabihf-/g' \
 		qt5/qtbase/mkspecs/linux-arm-gnueabihf-g++/qmake.conf
 	sed -i '44 a#include <limits>' qt5/qtbase/src/corelib/global/qglobal.h
+	sed -i '182d' sysroot/usr/include/EGL/eglplatform.h
+	echo "$$EGL_PLATFORM_PATCH" >> sysroot/usr/include/EGL/eglplatform.h
 
 configure-qt5:
 	rm -rf build && mkdir build && \
