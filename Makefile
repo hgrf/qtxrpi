@@ -75,3 +75,7 @@ configure-qt5:
 			-no-use-gold-linker \
 			-L${PWD}/sysroot/usr/lib/arm-linux-gnueabihf \
 			-I${PWD}/sysroot/usr/include/arm-linux-gnueabihf
+
+build-qt5:
+	cd build && make -j4
+	make install

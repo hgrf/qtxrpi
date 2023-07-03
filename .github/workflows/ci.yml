@@ -41,3 +41,5 @@ jobs:
     - name: Configure Qt5
       run: make configure-qt5
   
+    - name: Build Qt5
+      run: make build-qt5
