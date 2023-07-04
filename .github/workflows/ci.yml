@@ -43,3 +43,12 @@ jobs:
   
     - name: Build Qt5
       run: make build-qt5
+    
+    - name: List directory
+      run: ls -la
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: qt5.15
+        path: qt5.15
+  
