@@ -78,4 +78,4 @@ configure-qt5:
 
 build-qt5:
 	cd build && make -j4
-	make install
+	cd build && make install
