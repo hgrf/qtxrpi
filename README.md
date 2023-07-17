@@ -33,6 +33,17 @@ Execute:
     echo /usr/local/qt5.15/lib | sudo tee /etc/ld.so.conf.d/qt5.15.conf
     sudo ldconfig
 
+### To do
+
+`Makefile`:
+
+- sysroot-relativelinks.py is sufficiently small to simply include it in the Makefile
+
+`sysroot/build.sh`:
+
+- firmware files should not be required, what about python, perl etc?
+- sort out duplicates between /lib and /usr/lib (are they symlinks on the target?)
+
 ### References
 
 - http://cdn.kernel.org/pub/linux/kernel/people/will/docs/qemu/qemu-arm64-howto.html
