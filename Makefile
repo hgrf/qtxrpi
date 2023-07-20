@@ -1,17 +1,18 @@
+QTXRPI_PATH := /opt/qtxrpi
+
 .PHONY: docker
 docker:
 	docker build -t qtxrpi .
 
 .PHONY: sysroot
 sysroot:
-	docker run --rm -v ${PWD}/sysroot:/sysroot ghcr.io/hgrf/qtxrpi /sysroot/build.sh
-	sudo chown -R ${USER} sysroot
-	ls -la sysroot
-	#tar -czvf sysroot0.tar.gz sysroot
-	wget -O sysroot/sysroot-relativelinks.py https://raw.githubusercontent.com/abhiTronix/rpi_rootfs/master/scripts/sysroot-relativelinks.py
-	chmod +x sysroot/sysroot-relativelinks.py
-	sysroot/sysroot-relativelinks.py sysroot
-	cd sysroot && \
+	docker run --rm -v $(QTXRPI_PATH)/sysroot:/sysroot ghcr.io/hgrf/qtxrpi /sysroot/build.sh
+	sudo chown -R ${USER} $(QTXRPI_PATH)/sysroot
+	ls -la $(QTXRPI_PATH)/sysroot
+	wget -O $(QTXRPI_PATH)/sysroot/sysroot-relativelinks.py https://raw.githubusercontent.com/abhiTronix/rpi_rootfs/master/scripts/sysroot-relativelinks.py
+	chmod +x $(QTXRPI_PATH)/sysroot/sysroot-relativelinks.py
+	$(QTXRPI_PATH)/sysroot/sysroot-relativelinks.py $(QTXRPI_PATH)/sysroot
+	cd $(QTXRPI_PATH)/sysroot && \
     	rm -rf usr/include/sys && \
     	ln -s arm-linux-gnueabihf/asm -t usr/include && \
     	ln -s arm-linux-gnueabihf/gnu -t usr/include && \
@@ -25,7 +26,7 @@ sysroot:
 toolchain:
 	wget -O cross-gcc-10.2.0-pi_3+.tar.gz \
 		https://sourceforge.net/projects/raspberry-pi-cross-compilers/files/Raspberry%20Pi%20GCC%20Cross-Compiler%20Toolchains/Bullseye/GCC%2010.2.0/Raspberry%20Pi%203A%2B%2C%203B%2B%2C%204/cross-gcc-10.2.0-pi_3%2B.tar.gz
-	tar -xvf cross-gcc-10.2.0-pi_3+.tar.gz
+	tar -C $(QTXRPI_PATH) -xvf cross-gcc-10.2.0-pi_3+.tar.gz
 	rm cross-gcc-10.2.0-pi_3+.tar.gz
 
 download-qt5:
@@ -63,18 +64,18 @@ patch-qt5:
 configure-qt5:
 	rm -rf build && mkdir build && \
 		cd build && \
-		../qt5/configure -v -opengl es2 -eglfs \
+		QTXRPI_PATH=/opt/qtxrpi ../qt5/configure -v -opengl es2 -eglfs \
 			-device linux-rasp-pi4-v3d-g++ \
-			-device-option CROSS_COMPILE=${PWD}/cross-pi-gcc-10.2.0-2/bin/arm-linux-gnueabihf- \
-			-sysroot ${PWD}/sysroot \
+			-device-option CROSS_COMPILE=$(QTXRPI_PATH)/cross-pi-gcc-10.2.0-2/bin/arm-linux-gnueabihf- \
+			-sysroot $(QTXRPI_PATH)/sysroot \
 			-opensource -confirm-license -release -nomake tests -nomake examples -no-compile-examples \
 			-skip qtwayland -skip qtwebengine -skip qtlocation -skip qtscript \
 			-prefix /usr/local/qt5.15 \
-			-extprefix ${PWD}/qt5.15 \
+			-extprefix $(QTXRPI_PATH)/qt5.15 \
 			-make libs -pkg-config -recheck \
 			-no-use-gold-linker \
-			-L${PWD}/sysroot/usr/lib/arm-linux-gnueabihf \
-			-I${PWD}/sysroot/usr/include/arm-linux-gnueabihf
+			-L$(QTXRPI_PATH)/sysroot/usr/lib/arm-linux-gnueabihf \
+			-I$(QTXRPI_PATH)/sysroot/usr/include/arm-linux-gnueabihf
 
 build-qt5:
 	cd build && make -j4
