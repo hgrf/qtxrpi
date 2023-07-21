@@ -56,8 +56,8 @@ patch-qt5:
 	sed -i -e 's/arm-linux-gnueabi-/arm-linux-gnueabihf-/g' \
 		qt5/qtbase/mkspecs/linux-arm-gnueabihf-g++/qmake.conf
 	sed -i '44 a#include <limits>' qt5/qtbase/src/corelib/global/qglobal.h
-	sed -i '182d' sysroot/usr/include/EGL/eglplatform.h
-	echo "$$EGL_PLATFORM_PATCH" >> sysroot/usr/include/EGL/eglplatform.h
+	sed -i '182d' $(QTXRPI_PATH)/sysroot/usr/include/EGL/eglplatform.h
+	echo "$$EGL_PLATFORM_PATCH" >> $(QTXRPI_PATH)/sysroot/usr/include/EGL/eglplatform.h
 	sed -i -e 's/return eglWindow/return \(EGLNativeWindowType\)eglWindow/g' \
 		qt5/qtbase/src/plugins/platforms/eglfs/deviceintegration/eglfs_brcm/qeglfsbrcmintegration.cpp
 	sed -i -e 's/static_cast<EGL_DISPMANX_WINDOW_T/reinterpret_cast<EGL_DISPMANX_WINDOW_T/g' \
