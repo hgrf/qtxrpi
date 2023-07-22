@@ -82,3 +82,7 @@ configure-qt5:
 build-qt5:
 	cd build && make -j4
 	cd build && make install
+
+archive:
+	tar cvzf qt5.15.tar.gz $(QTXRPI_PATH)/qt5.15
+    tar cvzf sysroot.tar.gz $(QTXRPI_PATH)/sysroot

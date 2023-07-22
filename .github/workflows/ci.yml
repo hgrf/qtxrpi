@@ -50,9 +50,7 @@ jobs:
       run: ls -la
 
     - name: Prepare release files
-      run: |
-        tar cvzf qt5.15.tar.gz qt5.15
-        tar cvzf sysroot.tar.gz sysroot
+      run: make archive
   
     - name: Release
       uses: softprops/action-gh-release@v1
