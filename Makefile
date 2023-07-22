@@ -85,4 +85,4 @@ build-qt5:
 
 archive:
 	tar cvzf qt5.15.tar.gz $(QTXRPI_PATH)/qt5.15
-    tar cvzf sysroot.tar.gz $(QTXRPI_PATH)/sysroot
+	tar cvzf sysroot.tar.gz $(QTXRPI_PATH)/sysroot
