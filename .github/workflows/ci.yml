@@ -46,8 +46,10 @@ jobs:
     - name: Build Qt5
       run: make build-qt5
     
-    - name: List directory
-      run: ls -la
+    - name: List directory and show disk usage
+      run: |
+        ls -la
+        df -h
 
     - name: Prepare release files
       run: make archive
