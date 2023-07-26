@@ -1,8 +1,13 @@
 ## Setting up QEMU for Raspberry Pi 4 target
 
-## Qt5 setup
+### Download and setup
 
-    # on Raspberry Pi
+```
+make install
+```
+
+### Setting up the target Raspberry Pi
+
     echo "$USER ALL=NOPASSWD:$(which rsync)" | sudo tee --append /etc/sudoers
     sudo mkdir /usr/local/qt5.15
     sudo chown -R pi:pi /usr/local/qt5.15
@@ -20,16 +25,17 @@
     sudo apt install libncurses5 libpython2.7
     # }
 
-Execute:
+On host, execute:
 
     cd ~/rpi-qt
     rsync -avz --rsync-path="sudo rsync" qt5.15 pi@192.168.0.14:/usr/local
 
     # update sysroot on host
     # TODO: does not need to be rsync, can be local copy or symlink
-    rsync -avz --rsync-path="sudo rsync" --delete pi@192.168.0.14:/usr/local sysroot/usr
+    # rsync -avz --rsync-path="sudo rsync" --delete pi@192.168.0.14:/usr/local sysroot/usr
 
-    # On Raspberry Pi
+On Raspberry Pi, execute:
+
     echo /usr/local/qt5.15/lib | sudo tee /etc/ld.so.conf.d/qt5.15.conf
     sudo ldconfig
 
