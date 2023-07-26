@@ -1,4 +1,4 @@
-QTXRPI_PATH := $(shell pwd)
+QTXRPI_PATH := /opt/qtxrpi
 
 .PHONY: docker
 docker:
