@@ -26,6 +26,7 @@ sysroot:
     	ln -s arm-linux-gnueabihf/crti.o usr/lib/crti.o
 
 toolchain:
+	mkdir -p $(QTXRPI_PATH)
 	wget -O cross-gcc-10.2.0-pi_3+.tar.gz \
 		https://sourceforge.net/projects/raspberry-pi-cross-compilers/files/Raspberry%20Pi%20GCC%20Cross-Compiler%20Toolchains/Bullseye/GCC%2010.2.0/Raspberry%20Pi%203A%2B%2C%203B%2B%2C%204/cross-gcc-10.2.0-pi_3%2B.tar.gz
 	tar -C $(QTXRPI_PATH) -xvf cross-gcc-10.2.0-pi_3+.tar.gz
@@ -86,3 +87,8 @@ build-qt5:
 archive:
 	tar cvzf qt5.15.tar.gz $(QTXRPI_PATH)/qt5.15
 	tar cvzf sysroot.tar.gz $(QTXRPI_PATH)/sysroot
+
+install:
+	make toolchain
+	wget -O - "https://github.com/hgrf/qtxrpi/releases/download/v5.15.3-6/sysroot.tar.gz" | tar -C / -xz
+	wget -O - "https://github.com/hgrf/qtxrpi/releases/download/v5.15.3-6/qt5.15.tar.gz" | tar -C / -xz
