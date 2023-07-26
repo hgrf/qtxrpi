@@ -7,7 +7,7 @@ docker:
 .PHONY: sysroot
 sysroot:
 	mkdir -p $(QTXRPI_PATH)/sysroot
-	if [ ! -f "$(QTXRPI_PATH)/sysroot/build.sh"]; then cp sysroot/build.sh $(QTXRPI_PATH)/sysroot/build.sh; fi
+	if [ ! -f "$(QTXRPI_PATH)/sysroot/build.sh" ]; then cp sysroot/build.sh $(QTXRPI_PATH)/sysroot/build.sh; fi
 	docker run --rm -v $(QTXRPI_PATH)/sysroot:/sysroot ghcr.io/hgrf/qtxrpi /sysroot/build.sh
 	sudo chown -R ${USER} $(QTXRPI_PATH)/sysroot
 	ls -la $(QTXRPI_PATH)/sysroot
