@@ -90,5 +90,6 @@ archive:
 
 install:
 	make toolchain
-	wget -O - "https://github.com/hgrf/qtxrpi/releases/download/v5.15.3-6/sysroot.tar.gz" | tar -C / -xz
-	wget -O - "https://github.com/hgrf/qtxrpi/releases/download/v5.15.3-6/qt5.15.tar.gz" | tar -C / -xz
+	# TODO: store version externally
+	wget -O - "https://github.com/hgrf/qtxrpi/releases/download/v5.15.3-1/sysroot.tar.gz" | tar -C / -xz
+	wget -O - "https://github.com/hgrf/qtxrpi/releases/download/v5.15.3-1/qt5.15.tar.gz" | tar -C / -xz
