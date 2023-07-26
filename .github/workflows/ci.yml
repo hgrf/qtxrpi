@@ -29,7 +29,10 @@ jobs:
       run: docker push ghcr.io/hgrf/qtxrpi:latest
 
     - name: Extract sysroot
-      run: make sysroot
+      run: |
+        make sysroot
+        docker image rm ghcr.io/hgrf/qtxrpi:latest
+        docker system prune -f
 
     - name: Get toolchain
       run: make toolchain
