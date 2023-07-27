@@ -1,4 +1,4 @@
-## Setting up QEMU for Raspberry Pi 4 target
+## Cross-compilation with Qt5 for Raspberry Pi
 
 ### Download and setup
 
