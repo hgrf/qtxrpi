@@ -34,12 +34,21 @@ EOF
 
 # set up startx on login
 sshpass -p $PASS ssh $CONN \
-    "sudo bash -c 'cat > /home/qtxrpi/.profile << EOF
+    "bash -c 'cat > /home/qtxrpi/.profile << EOF
 if ! DISPLAY=:0 timeout 1s xset q &>/dev/null; then
     startx
 else
     echo \"X is already running :-)\"
 fi
+EOF
+'"
+
+sshpass -p $PASS ssh $CONN \
+    "sudo bash -c 'cat > /etc/X11/xorg.conf.d/10-monitor.conf << EOF
+Section \"Monitor\"
+    Identifier \"Virtual-1\"
+    Option \"PreferredMode\" \"1920x1080\"
+EndSection
 EOF
 '"
 
