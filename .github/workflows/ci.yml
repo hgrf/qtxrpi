@@ -20,18 +20,12 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Build docker images
-      run: docker build -t ghcr.io/hgrf/qtxrpi .
-
-    - name: Login to ghcr
-      run: echo ${{ github.token }} | docker login ghcr.io -u hgrf --password-stdin
-
-    - name: Push to ghcr
-      run: docker push ghcr.io/hgrf/qtxrpi:latest
+      run: make docker
 
     - name: Extract sysroot
       run: |
         make sysroot
-        docker image rm ghcr.io/hgrf/qtxrpi:latest
+        docker image rm qtxrpi
         docker system prune -f
 
     - name: Get toolchain
@@ -64,3 +58,15 @@ jobs:
         files: |
           qt5.15.tar.gz
           sysroot.tar.gz
+
+    - name: Create emulator docker image
+      run: |
+        apt install -y sshpass
+        make emulator
+
+    - name: Login to ghcr
+      run: echo ${{ github.token }} | docker login ghcr.io -u hgrf --password-stdin
+
+    - name: Push to ghcr
+      run: docker push ghcr.io/hgrf/qtxrpi:latest
+  

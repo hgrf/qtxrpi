@@ -88,6 +88,18 @@ archive:
 	tar cvzf qt5.15.tar.gz $(QTXRPI_PATH)/qt5.15
 	tar cvzf sysroot.tar.gz $(QTXRPI_PATH)/sysroot
 
+emulator:
+	sudo ./setup_emulator.sh $(QTXRPI_PATH)/qt5.15
+
+run-emulator:
+	sudo docker run \
+		--rm -it \
+		-p 127.0.0.1:8022:8022/tcp \
+		-e DISPLAY \
+		-v /tmp/.X11-unix:/tmp/.X11-unix \
+		ghcr.io/hgrf/qtxrpi:latest \
+		/run_qemu.sh
+		
 install:
 	make toolchain
 	# TODO: store version externally
