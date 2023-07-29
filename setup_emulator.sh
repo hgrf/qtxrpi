@@ -22,6 +22,27 @@ sshpass -p $PASS ssh $CONN \
     sudo ldconfig"
 sshpass -p $PASS rsync -avz -e "ssh $OPTS" --rsync-path="sudo rsync" $1 $TARGET:/usr/local/
 
+# set up autologin
+sshpass -p $PASS ssh $CONN \
+    "sudo systemctl --quiet set-default multi-user.target && \
+    sudo bash -c 'cat > /etc/systemd/system/getty@tty1.service.d/autologin.conf << EOF
+[Service]
+ExecStart=
+ExecStart=-/sbin/agetty --autologin qtxrpi --noclear %I \$TERM
+EOF
+'"
+
+# set up startx on login
+sshpass -p $PASS ssh $CONN \
+    "sudo bash -c 'cat > /home/qtxrpi/.profile << EOF
+if ! DISPLAY=:0 timeout 1s xset q &>/dev/null; then
+    startx
+else
+    echo \"X is already running :-)\"
+fi
+EOF
+'"
+
 if [ $? -gt 0 ]; then
     echo "Failed to install dependencies"
     sshpass -p $PASS ssh $CONN "sudo shutdown now"
