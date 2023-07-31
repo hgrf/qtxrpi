@@ -63,7 +63,9 @@ jobs:
 
     - name: Create emulator docker image
       run: |
-        apt install -y sshpass
+        rm qt5.15.tar.gz
+        rm sysroot.tar.gz
+        sudo apt install -y sshpass
         make emulator
 
     - name: Login to ghcr
