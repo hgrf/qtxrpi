@@ -41,7 +41,9 @@ jobs:
       run: make configure-qt5
   
     - name: Build Qt5
-      run: make build-qt5
+      run: |
+        make build-qt5
+        rm -rf build
     
     - name: List directory and show disk usage
       run: |
