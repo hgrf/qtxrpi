@@ -72,5 +72,10 @@ jobs:
       run: echo ${{ github.token }} | docker login ghcr.io -u hgrf --password-stdin
 
     - name: Push to ghcr
-      run: docker push ghcr.io/hgrf/qtxrpi:latest
+      run: |
+        GITHUB_TAG=${GITHUB_REF#refs/tags/}
+        echo "Tag: ${GITHUB_TAG}"
+        docker tag ghcr.io/hgrf/qtxrpi:latest ghcr.io/hgrf/qtxrpi:${GITHUB_TAG}
+        docker push ghcr.io/hgrf/qtxrpi:latest
+        docker push ghcr.io/hgrf/qtxrpi:${GITHUB_TAG}
   
