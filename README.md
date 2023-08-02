@@ -3,7 +3,10 @@
 ### Download and setup
 
 ```
-make install
+sudo make install
+
+# test the emulator with
+sudo make run-emulator
 ```
 
 ### Setting up the target Raspberry Pi

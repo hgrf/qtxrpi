@@ -97,11 +97,12 @@ run-emulator:
 		-p 127.0.0.1:8022:8022/tcp \
 		-e DISPLAY \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		ghcr.io/hgrf/qtxrpi:latest \
+		ghcr.io/hgrf/qtxrpi:v5.15.3-2 \
 		/run_qemu.sh
 		
 install:
 	make toolchain
 	# TODO: store version externally
-	wget -O - "https://github.com/hgrf/qtxrpi/releases/download/v5.15.3-1/sysroot.tar.gz" | tar -C / -xz
-	wget -O - "https://github.com/hgrf/qtxrpi/releases/download/v5.15.3-1/qt5.15.tar.gz" | tar -C / -xz
+	wget -O - "https://github.com/hgrf/qtxrpi/releases/download/v5.15.3-2/sysroot.tar.gz" | tar -C / -xz
+	wget -O - "https://github.com/hgrf/qtxrpi/releases/download/v5.15.3-2/qt5.15.tar.gz" | tar -C / -xz
+	docker pull ghcr.io/hgrf/qtxrpi:v5.15.3-2
