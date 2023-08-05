@@ -1,15 +1,12 @@
 #!/bin/bash -ex
 apt update
-apt install -y \
-    guestfish \
-    linux-image-5.19.0-46-generic
+apt install -y rsync
+rm -rf /var/lib/apt/lists/*
 cd /sysroot
 rm -rf lib usr/lib usr/include
 mkdir -p lib
 mkdir -p usr/lib
 mkdir -p usr/include
-guestfish -a ../rootfs.qcow2 -m /dev/sda <<EOF
-tgz-out /lib - | tar -C lib -zxvf -
-tgz-out /usr/lib - | tar -C usr/lib -zxvf -
-tgz-out /usr/include - | tar -C usr/include -zxvf -
-EOF
+rsync -avh /lib lib
+rsync -avh /usr/lib usr/lib
+rsync -avh /usr/include usr/include
