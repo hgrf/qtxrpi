@@ -2,7 +2,12 @@ QTXRPI_PATH := /opt/qtxrpi
 
 .PHONY: docker
 docker:
-	docker build -t qtxrpi .
+	docker run --name qtxrpi -t --privileged \
+		-v ${PWD}:/opt/qemu-rpi/sysroot/mnt \
+		ghcr.io/hgrf/qemu-rpi-user:v0.1.3 \
+		chroot-helper.sh -ex /mnt/setup.sh
+	docker commit qtxrpi qtxrpi
+	docker rm qtxrpi
 
 .PHONY: sysroot
 sysroot:
