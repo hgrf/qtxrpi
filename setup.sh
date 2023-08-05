@@ -7,4 +7,5 @@ apt install -y build-essential cmake unzip pkg-config gfortran
 apt build-dep -y qt5-qmake libqt5gui5 libqt5webengine-data libqt5webkit5 libudev-dev libinput-dev libts-dev libxcb-xinerama0-dev libxcb-xinerama0
 apt install -y libxcb-randr0-dev libxcb-xtest0-dev libxcb-shape0-dev libxcb-xkb-dev
 apt install -y libbluetooth-dev
+apt install -y rsync
 rm -rf /var/lib/apt/lists/*
