@@ -13,7 +13,7 @@ docker:
 sysroot:
 	mkdir -p $(QTXRPI_PATH)/sysroot
 	if [ ! -f "$(QTXRPI_PATH)/sysroot/build.sh" ]; then cp sysroot/build.sh $(QTXRPI_PATH)/sysroot/build.sh; fi
-	docker run --rm -v $(QTXRPI_PATH)/sysroot:/sysroot qtxrpi /sysroot/build.sh
+	docker run --rm --privileged -v $(QTXRPI_PATH)/sysroot:/opt/qemu-rpi/sysroot/sysroot qtxrpi chroot-helper.sh /sysroot/build.sh
 	sudo chown -R ${USER} $(QTXRPI_PATH)/sysroot
 	ls -la $(QTXRPI_PATH)/sysroot
 	wget -O $(QTXRPI_PATH)/sysroot/sysroot-relativelinks.py https://raw.githubusercontent.com/abhiTronix/rpi_rootfs/master/scripts/sysroot-relativelinks.py
@@ -21,21 +21,21 @@ sysroot:
 	$(QTXRPI_PATH)/sysroot/sysroot-relativelinks.py $(QTXRPI_PATH)/sysroot
 	cd $(QTXRPI_PATH)/sysroot && \
     	rm -rf usr/include/sys && \
-    	ln -s arm-linux-gnueabihf/asm -t usr/include && \
-    	ln -s arm-linux-gnueabihf/gnu -t usr/include && \
-    	ln -s arm-linux-gnueabihf/bits -t usr/include && \
-    	ln -s arm-linux-gnueabihf/sys -t usr/include && \
-		ln -s ../arm-linux-gnueabihf/openssl/opensslconf.h -t usr/include/openssl && \
-		ln -s arm-linux-gnueabihf/crtn.o usr/lib/crtn.o && \
-    	ln -s arm-linux-gnueabihf/crt1.o usr/lib/crt1.o && \
-    	ln -s arm-linux-gnueabihf/crti.o usr/lib/crti.o
+    	ln -s aarch64-linux-gnu/asm -t usr/include && \
+    	ln -s aarch64-linux-gnu/gnu -t usr/include && \
+    	ln -s aarch64-linux-gnu/bits -t usr/include && \
+    	ln -s aarch64-linux-gnu/sys -t usr/include && \
+		ln -s ../aarch64-linux-gnu/openssl/opensslconf.h -t usr/include/openssl && \
+		ln -s aarch64-linux-gnu/crtn.o usr/lib/crtn.o && \
+    	ln -s aarch64-linux-gnu/crt1.o usr/lib/crt1.o && \
+    	ln -s aarch64-linux-gnu/crti.o usr/lib/crti.o
 
 toolchain:
 	mkdir -p $(QTXRPI_PATH)
-	wget -O cross-gcc-10.2.0-pi_3+.tar.gz \
-		https://sourceforge.net/projects/raspberry-pi-cross-compilers/files/Raspberry%20Pi%20GCC%20Cross-Compiler%20Toolchains/Bullseye/GCC%2010.2.0/Raspberry%20Pi%203A%2B%2C%203B%2B%2C%204/cross-gcc-10.2.0-pi_3%2B.tar.gz
-	tar -C $(QTXRPI_PATH) -xvf cross-gcc-10.2.0-pi_3+.tar.gz
-	rm cross-gcc-10.2.0-pi_3+.tar.gz
+	wget -O cross-gcc-10.2.0-pi_64.tar.gz \
+		https://sourceforge.net/projects/raspberry-pi-cross-compilers/files/Bonus%20Raspberry%20Pi%20GCC%2064-Bit%20Toolchains/Raspberry%20Pi%20GCC%2064-Bit%20Cross-Compiler%20Toolchains/Bullseye/GCC%2010.2.0/cross-gcc-10.2.0-pi_64.tar.gz
+	tar -C $(QTXRPI_PATH) -xvf cross-gcc-10.2.0-pi_64.tar.gz
+	rm cross-gcc-10.2.0-pi_64.tar.gz
 
 download-qt5:
 	wget -O qt-everywhere-opensource-src-5.15.3.tar.xz \
@@ -58,9 +58,9 @@ endef
 
 export EGL_PLATFORM_PATCH
 patch-qt5:
-	cp -R qt5/qtbase/mkspecs/linux-arm-gnueabi-g++ qt5/qtbase/mkspecs/linux-arm-gnueabihf-g++
-	sed -i -e 's/arm-linux-gnueabi-/arm-linux-gnueabihf-/g' \
-		qt5/qtbase/mkspecs/linux-arm-gnueabihf-g++/qmake.conf
+	sed -i -e 's/-mfpu=crypto-neon-fp-armv8//g' qt5/qtbase/mkspecs/devices/linux-rasp-pi4-v3d-g++/qmake.conf
+	sed -i '33d' qt5/qtbase/mkspecs/devices/linux-rasp-pi4-v3d-g++/qmake.conf
+	sed -i -e 's/linux_arm_device_post.conf/linux_device_post.conf/g' qt5/qtbase/mkspecs/devices/linux-rasp-pi4-v3d-g++/qmake.conf
 	sed -i '44 a#include <limits>' qt5/qtbase/src/corelib/global/qglobal.h
 	sed -i '182d' $(QTXRPI_PATH)/sysroot/usr/include/EGL/eglplatform.h
 	echo "$$EGL_PLATFORM_PATCH" >> $(QTXRPI_PATH)/sysroot/usr/include/EGL/eglplatform.h
@@ -74,7 +74,7 @@ configure-qt5:
 		cd build && \
 		QTXRPI_PATH=/opt/qtxrpi ../qt5/configure -v -opengl es2 -eglfs \
 			-device linux-rasp-pi4-v3d-g++ \
-			-device-option CROSS_COMPILE=$(QTXRPI_PATH)/cross-pi-gcc-10.2.0-2/bin/arm-linux-gnueabihf- \
+			-device-option CROSS_COMPILE=$(QTXRPI_PATH)/cross-pi-gcc-10.2.0-64/bin/aarch64-linux-gnu- \
 			-sysroot $(QTXRPI_PATH)/sysroot \
 			-opensource -confirm-license -release -nomake tests -nomake examples -no-compile-examples \
 			-skip qtwayland -skip qtwebengine -skip qtlocation -skip qtscript \
@@ -82,8 +82,8 @@ configure-qt5:
 			-extprefix $(QTXRPI_PATH)/qt5.15 \
 			-make libs -pkg-config -recheck \
 			-no-use-gold-linker \
-			-L$(QTXRPI_PATH)/sysroot/usr/lib/arm-linux-gnueabihf \
-			-I$(QTXRPI_PATH)/sysroot/usr/include/arm-linux-gnueabihf
+			-L$(QTXRPI_PATH)/sysroot/usr/lib/aarch64-linux-gnu \
+			-I$(QTXRPI_PATH)/sysroot/usr/include/aarch64-linux-gnu
 
 build-qt5:
 	cd build && make -j4
