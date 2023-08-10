@@ -17,6 +17,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: Make space
+      run: |
+        sudo rm -rf /usr/share/dotnet
+        sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+
     - name: Build docker images
       run: make docker
 
