@@ -94,20 +94,28 @@ archive:
 	tar cvzf sysroot.tar.gz $(QTXRPI_PATH)/sysroot
 
 emulator:
-	sudo ./setup_emulator.sh $(QTXRPI_PATH)/qt5.15
+	docker run --privileged \
+		--name qtxrpi \
+		-v ${PWD}:/opt/qemu-rpi/sysroot/mnt \
+		ghcr.io/hgrf/qemu-rpi-user:v0.1.4 \
+		chroot-helper.sh -ex /mnt/setup_emulator.sh
+	docker commit qtxrpi ghcr.io/hgrf/qtxrpi:latest
+	docker rm qtxrpi
 
 run-emulator:
-	sudo docker run \
-		--rm -it \
-		-p 127.0.0.1:8022:8022/tcp \
+	xhost +
+	docker run --rm -itd --privileged \
+		-p 127.0.0.1:8022:22/tcp \
 		-e DISPLAY \
-		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		ghcr.io/hgrf/qtxrpi:v5.15.3-2 \
-		/run_qemu.sh
+		-v $(QTXRPI_PATH)/qt5.15:/opt/qemu-rpi/sysroot/usr/local/qt5.15 \
+		-v /tmp/.X11-unix:/opt/qemu-rpi/sysroot/tmp/.X11-unix \
+		ghcr.io/hgrf/qtxrpi:latest \
+		chroot-helper.sh \
+		entrypoint.sh
 		
 install:
 	make toolchain
 	# TODO: store version externally
-	wget -O - "https://github.com/hgrf/qtxrpi/releases/download/v5.15.3-2/sysroot.tar.gz" | tar -C / -xz
-	wget -O - "https://github.com/hgrf/qtxrpi/releases/download/v5.15.3-2/qt5.15.tar.gz" | tar -C / -xz
-	docker pull ghcr.io/hgrf/qtxrpi:v5.15.3-2
+	wget -O - "https://github.com/hgrf/qtxrpi/releases/download/v5.15.3-3/sysroot.tar.gz" | tar -C / -xz
+	wget -O - "https://github.com/hgrf/qtxrpi/releases/download/v5.15.3-3/qt5.15.tar.gz" | tar -C / -xz
+	docker pull ghcr.io/hgrf/qtxrpi:v5.15.3-3
