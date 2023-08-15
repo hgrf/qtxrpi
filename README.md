@@ -66,3 +66,5 @@ On Raspberry Pi, execute:
 - https://www.ics.com/blog/building-qt-5-raspberry-pi#.U0ubso_7sYy
 - https://www.interelectronix.com/qt-515-cross-compilation-raspberry-compute-module-4-ubuntu-20-lts.html
 - https://www.youtube.com/watch?v=TmtN3Rmx9Rk
+- https://embeddeduse.com/2021/03/29/how-to-set-up-qtcreator-for-cross-compilation-with-cmake-in-5-minutes/
+- https://code.qt.io/cgit/yocto/meta-boot2qt.git/tree/meta-boot2qt/files/configure-qtcreator.sh
