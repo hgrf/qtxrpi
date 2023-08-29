@@ -9,6 +9,20 @@ sudo make install
 sudo make run-emulator
 ```
 
+For debugging to work, make sure that `libpython2.7` is installed. For now,
+the "Start debugging of startup project" button in QtCreator does not work
+properly. This is because QtCreator wants to start `gdbserver --multi`, but
+inside the Docker we use QEMU user mode emulation, i.e. the GDB server has
+to be started manually as follows within the emulator:
+
+```sh
+qemu-aarch64-static -g 10000 <YOUR_EXECUTABLE>
+```
+
+where 10000 is the port where QEMU will set up the GDB server. You can then
+use `Debug->Start Debugging->Attach to Running Debug Server` in QtCreator to
+connect to the application.
+
 ### Setting up the target Raspberry Pi
 
     echo "$USER ALL=NOPASSWD:$(which rsync)" | sudo tee --append /etc/sudoers

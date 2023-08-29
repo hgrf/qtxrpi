@@ -106,6 +106,7 @@ run-emulator:
 	xhost +
 	docker run --rm -itd --privileged \
 		-p 127.0.0.1:8022:22/tcp \
+		-p 127.0.0.1:10000:10000/tcp \
 		-e DISPLAY \
 		-v $(QTXRPI_PATH)/qt5.15:/opt/qemu-rpi/sysroot/usr/local/qt5.15 \
 		-v /tmp/.X11-unix:/opt/qemu-rpi/sysroot/tmp/.X11-unix \
@@ -118,4 +119,6 @@ install:
 	# TODO: store version externally
 	wget -O - "https://github.com/hgrf/qtxrpi/releases/download/v5.15.3-3/sysroot.tar.gz" | tar -C / -xz
 	wget -O - "https://github.com/hgrf/qtxrpi/releases/download/v5.15.3-3/qt5.15.tar.gz" | tar -C / -xz
+	mkdir -p $(QTXRPI_PATH)/sysroot/usr/local
+	ln -s $(QTXRPI_PATH)/qt5.15 $(QTXRPI_PATH)/sysroot/usr/local/qt5.15
 	docker pull ghcr.io/hgrf/qtxrpi:v5.15.3-3
